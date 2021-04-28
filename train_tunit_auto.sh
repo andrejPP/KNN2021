@@ -10,7 +10,7 @@
 trap 'clean_scratch' TERM EXIT
 
 HOMEPATH=/storage/brno2/home/$PBS_O_LOGNAME
-DATAPATH=$HOMEPATH/knndata/    #folder with s2w dataset
+DATAPATH=$HOMEPATH/KNN2021/    #folder with s2w dataset
 RESPATH=$HOMEPATH/knn2021/    #store results in this folder
 
 cd $SCRATCHDIR
@@ -22,7 +22,7 @@ git clone https://github.com/andrejPP/tunit.git
 mkdir data
 cd data
 cp $DATAPATH/summer2winter.tar.gz .
-tar -xf summer2winter
+tar -xf summer2winter.tar.gz
 cd ../
 
 # Prepare environment
