@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -q gpu
-#PBS -l walltime=4:0:0
-#PBS -l select=1:ncpus=2:ngpus=1:gpu_cap=cuda61:mem=20gb:scratch_ssd=20gb
+#PBS -l walltime=7:0:0
+#PBS -l select=1:ncpus=2:ngpus=2:gpu_cap=cuda70:mem=20gb:scratch_ssd=20gb
 #PBS -j oe
 
 ##!!!!! IF YOU CHANGE WALLTIME DONT FORGET TO CHANGE TIMEOUT FOR TRAINING SCRIPT. !!!!!####
@@ -17,6 +17,10 @@ cd $SCRATCHDIR
 
 # Download the Tunit repository
 git clone https://github.com/andrejPP/tunit.git
+cd tunit
+git checkout wgan
+cd ..
+
 
 # Download dataset
 mkdir data
@@ -32,10 +36,10 @@ source ./env/bin/activate
 mkdir tmp
 cd tunit
 pip install --upgrade pip
-TMPDIR=../tmp pip install --upgrade -r requirements.txt
+TMPDIR=../tmp pip install --upgrade torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html -r requirements.txt
 
 # Start training.
-timeout --foreground 3h python3 main.py --gpu $CUDA_VISIBLE_DEVICES --p_semi 1.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 8
+timeout --foreground 6h python3 main.py --p_semi 0.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 8 --val_batch 8
 
 # Save model
 new_model_dir=$RESPATH/$(date +%Y-%m-%d-%H)
