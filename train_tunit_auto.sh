@@ -1,6 +1,5 @@
 #!/bin/bash
 #PBS -q gpu
-#PBS -l walltime=7:0:0
 #PBS -l select=1:ncpus=2:ngpus=2:gpu_cap=cuda70:mem=20gb:scratch_ssd=20gb
 #PBS -j oe
 
@@ -18,7 +17,7 @@ cd $SCRATCHDIR
 # Download the Tunit repository
 git clone https://github.com/andrejPP/tunit.git
 cd tunit
-git checkout wgan
+git checkout $branch
 cd ..
 
 
@@ -39,10 +38,17 @@ pip install --upgrade pip
 TMPDIR=../tmp pip install --upgrade torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html -r requirements.txt
 
 # Start training.
-timeout --foreground 6h python3 main.py --p_semi 0.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 8 --val_batch 8
+if [ -z "$modelpath" ]; then
+    python3 main.py --timeout ${stime} --p_semi 0.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 32 --val_batch 8
+else
+    mkdir ./logs
+    mkdir ./logs/latest_model
+    cp -r ${modelpath}/* ./logs/latest_model
+    timeout --foreground ${stime}h python3 main.py --p_semi 0.0  --load_model latest_model --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 16 --val_batch 8
+fi
 
 # Save model
-new_model_dir=$RESPATH/$(date +%Y-%m-%d-%H)
+new_model_dir=$RESPATH/$(date +%Y-%m-%d-%H)-${branch}-${stime}h
 mkdir $new_model_dir
 cp -r logs $new_model_dir
 cp -r results $new_model_dir
