@@ -39,12 +39,12 @@ TMPDIR=../tmp pip install --upgrade torch==1.8.1+cu111 torchvision==0.9.1+cu111 
 
 # Start training.
 if [ -z "$modelpath" ]; then
-    python3 main.py --timeout ${stime} --p_semi 0.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 32 --val_batch 8
+    python3 main.py --timeout ${stime} --p_semi 0.0 --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 16 --val_batch 8
 else
     mkdir ./logs
     mkdir ./logs/latest_model
     cp -r ${modelpath}/* ./logs/latest_model
-    timeout --foreground ${stime}h python3 main.py --p_semi 0.0  --load_model latest_model --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 16 --val_batch 8
+    python3 main.py --timeout ${stime} --p_semi 0.0  --load_model latest_model --dataset summer2winter --output_k 2 --data_path ../data --workers 0 --batch_size 16 --val_batch 8
 fi
 
 # Save model
