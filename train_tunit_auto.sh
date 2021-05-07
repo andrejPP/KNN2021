@@ -40,7 +40,7 @@ fi
 
 printf "-----------------------------------------------------------\n"
 printf "JOB ID:             $PBS_JOBID\n"
-printf "JOB NAME:           $PBS_JOBNAME\n
+printf "JOB NAME:           $PBS_JOBNAME\n"
 printf "JOB SERVER NODE:    $PBS_SERVER\n"
 printf "START TIME:         $(date +%Y-%m-%d-%H)\n"
 printf "GIT BRANCH:         $branch\n"
