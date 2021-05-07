@@ -38,13 +38,13 @@ if [ ! -d "$HOMEPATH/knn2021/" ]; then # test if dir exists
 	mkdir $HOMEPATH/knn2021/
 fi
 
-printf "-----------------------------------------------------------\n"
+printf "\-----------------------------------------------------------\n"
 printf "JOB ID:             $PBS_JOBID\n"
 printf "JOB NAME:           $PBS_JOBNAME\n"
 printf "JOB SERVER NODE:    $PBS_SERVER\n"
 printf "START TIME:         $(date +%Y-%m-%d-%H)\n"
 printf "GIT BRANCH:         $branch\n"
-printf "-----------------------------------------------------------\n"
+printf "\-----------------------------------------------------------\n"
 
 # Prepare environment
 printf "Prepare environment\n"
