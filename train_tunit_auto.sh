@@ -14,21 +14,40 @@ RESPATH=$HOMEPATH/knn2021/    #store results in this folder
 
 cd $SCRATCHDIR
 
+# clean the SCRATCH directory
+clean_scratch
+
 # Download the Tunit repository
+printf "Download the Tunit repository\n"
 git clone https://github.com/andrejPP/tunit.git
 cd tunit
 git checkout $branch
 cd ..
 
-
 # Download dataset
+printf "Download dataset\n"
 mkdir data
 cd data
 cp $DATAPATH/summer2winter.tar.gz .
 tar -xf summer2winter.tar.gz
 cd ../
 
+# Prepare directory with results
+printf "Prepare directory with results\n"
+if [ ! -d "$HOMEPATH/knn2021/" ]; then # test if dir exists
+	mkdir $HOMEPATH/knn2021/
+fi
+
+printf "-----------------------------------------------------------\n"
+printf "JOB ID:             $PBS_JOBID\n"
+printf "JOB NAME:           $PBS_JOBNAME\n
+printf "JOB SERVER NODE:    $PBS_SERVER\n"
+printf "START TIME:         $(date +%Y-%m-%d-%H)\n"
+printf "GIT BRANCH:         $branch\n"
+printf "-----------------------------------------------------------\n"
+
 # Prepare environment
+printf "Prepare environment\n"
 module load python36-modules-gcc
 python3 -m venv env
 source ./env/bin/activate
@@ -52,5 +71,8 @@ new_model_dir=$RESPATH/$(date +%Y-%m-%d-%H)-${branch}-${stime}h
 mkdir $new_model_dir
 cp -r logs $new_model_dir
 cp -r results $new_model_dir
+
+# clean the SCRATCH directory
+clean_scratch
 
 
